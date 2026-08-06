@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="FinTrack Pro — A personal finance tracker to manage income and expenses. Track spending, visualize cash flow, and stay on budget.">
+    <title>FinTrack Pro</title>
+    <script src="auth.js"></script>
+    <script>checkAuth(true);</script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class="ri-stack-fill"></i>
+                <div class="name">
+                    <h2>FinTrack Pro</h2>
+                    <p>Personal Finance</p>
+                </div>
+            </div>
+            <nav class="menu">
+                <a href="#" class="active todash">
+                    <i class="ri-dashboard-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="toset">
+                    <i class="ri-settings-3-line"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <button class="addtransaction" id="btnAddTransaction">
+                <i class="ri-add-line"></i>
+                <span>Add Transaction</span>
+            </button>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <div class="main">
+            <header class="topbar">
+                <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                    <i class="ri-menu-line"></i>
+                </button>
+                <div class="profile">
+                    <div class="info">
+                        <span class="username">User</span>
+                    </div>
+                    <button class="logout" id="btnLogout" aria-label="Log out">
+                        <i class="ri-logout-box-r-line"></i>Logout
+                    </button>
+                </div>
+            </header>
+
+            <section class="dashboard" id="dashboardSection">
+                <div class="header">
+                    <div>
+                        <h1>Financial Overview</h1>
+                        <p>Real-time tracking application</p>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="card">
+                        <div class="icon" style="background-color: #DBEAFE; color: #1e3a8a;">
+                            <i class="ri-wallet-3-fill"></i>
+                        </div>
+                        <p>Current Balance</p>
+                        <h3>$0.00</h3>
+                    </div>
+                    <div class="card">
+                        <div class="icon" style="background-color: #DCFCE7; color: #166534;">
+                            <i class="ri-arrow-right-up-line"></i>
+                        </div>
+                        <p>Total Income</p>
+                        <h3 style="color: #166534;">$0.00</h3>
+                    </div>
+                    <div class="card">
+                        <div class="icon" style="background-color: #FEE2E2; color: #991B1B;">
+                            <i class="ri-arrow-right-down-line"></i>
+                        </div>
+                        <p>Total Expense</p>
+                        <h3 style="color: #991B1B;">$0.00</h3>
+                    </div>
+                    <div class="card">
+                        <div class="icon" style="background-color: #FEF3C7; color: #92400e;">
+                            <i class="ri-receipt-line"></i>
+                        </div>
+                        <p>Total Transactions</p>
+                        <h3>0</h3>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="left">
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h3>Cash Flow Analysis</h3>
+                            </div>
+                            <div class="chart-area">
+                                <canvas id="cashFlowChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="all">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>All Transactions</h3>
+                                </div>
+                                <div class="find">
+                                    <div class="search">
+                                        <i class="ri-search-line"></i>
+                                        <input type="text" placeholder="Search transactions..."
+                                            aria-label="Search transactions">
+                                    </div>
+                                    <select id="typeFilter" aria-label="Filter by type">
+                                        <option value="all">All Types</option>
+                                        <option value="income">Income Only</option>
+                                        <option value="expense">Expense Only</option>
+                                    </select>
+                                </div>
+                                <div class="table-wrapper">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>DATE</th>
+                                                <th>DESCRIPTION</th>
+                                                <th>CATEGORY</th>
+                                                <th>AMOUNT</th>
+                                                <th>ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="transactionTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Preferences</h3>
+                            </div>
+                            <div class="preference-item">
+                                <div>
+                                    <h4>Dark Mode</h4>
+                                </div>
+                                <label class="switch" aria-label="Toggle dark mode">
+                                    <input type="checkbox" id="darkModeToggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <button id="resetDataBtn">
+                                <i class="ri-delete-bin-line"></i> Reset All Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings" id="settingsSection" style="display: none;">
+                <div class="info">
+                    <h1>Settings</h1>
+                    <p>Manage your account profile and app formatting.</p>
+                </div>
+                <div class="card">
+                    <div class="header">
+                        <h3>Profile Details</h3>
+                    </div>
+                    <form id="settingsForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="settingName">Full Name</label>
+                                <input type="text" id="settingName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="settingCurrency">Primary Currency</label>
+                                <select id="settingCurrency" required>
+                                    <option value="$">USD ($)</option>
+                                    <option value="€">EUR (€)</option>
+                                    <option value="£">GBP (£)</option>
+                                    <option value="₹">INR (₹)</option>
+                                    <option value="¥">JPY (¥)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="save">Save Changes</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="model" id="transactionModal" style="display: none;">
+        <div class="card">
+            <div class="header">
+                <h3>Add Transaction</h3>
+                <span class="cross" aria-label="Close modal"><i class="ri-close-line"></i></span>
+            </div>
+            <form id="transactionForm">
+                <input type="hidden" id="txId" value="">
+                <div class="form-group" style="margin-bottom: 12px; width: 100%;">
+                    <label>Type</label>
+                    <select id="txType" required>
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 12px; width: 100%;">
+                    <label>Description</label>
+                    <input type="text" id="txDescription" placeholder="e.g. Amazon, Salary, Coffee" required>
+                </div>
+                <div class="form-row" style="margin-bottom: 12px;">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="txAmount" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="txDate" required>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 12px; width: 100%;">
+                    <label>Category</label>
+                    <select id="txCategory" required>
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="Food & Dining">Food & Dining</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Recharge & Bills">Recharge & Bills</option>
+                        <option value="Petrol & Auto">Petrol & Auto</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Salary">Salary</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="saveT">Save Transaction</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
